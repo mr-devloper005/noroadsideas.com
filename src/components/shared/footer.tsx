@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FileText, Building2, LayoutGrid, Tag, Github, Twitter, Linkedin, Image as ImageIcon, User, ArrowRight, Sparkles } from 'lucide-react'
+import { FileText, Building2, LayoutGrid, Tag, Github, Twitter, Linkedin, Image as ImageIcon, User, ArrowRight } from 'lucide-react'
 import { SITE_CONFIG, type TaskKey } from '@/lib/site-config'
 import { siteContent } from '@/config/site.content'
 import { getFactoryState } from '@/design/factory/get-factory-state'
@@ -87,8 +87,8 @@ export function Footer() {
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr_1fr]">
             <div className="rounded-[2rem] border border-white/10 bg-white/5 p-7">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-white/8 p-1.5">
-                  <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+                <div className="flex h-12 w-12 items-center justify-center overflow-hidden">
+                  <img src="/favicon.png?v=20260424" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain drop-shadow-[0_6px_14px_rgba(0,0,0,0.35)]" />
                 </div>
                 <div>
                   <p className="text-lg font-semibold">{SITE_CONFIG.name}</p>
@@ -140,32 +140,25 @@ export function Footer() {
 
   if (recipe.footer === 'editorial-footer') {
     return (
-      <footer className="border-t border-[#dbc6b6] bg-[linear-gradient(180deg,#fff9f0_0%,#fff1df_100%)] text-[#2f1d16]">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr_0.9fr]">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#dbc6b6] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#72594a]">
-                <Sparkles className="h-3.5 w-3.5" />
-                Editorial desk
-              </div>
-              <h3 className="mt-5 text-3xl font-semibold tracking-[-0.04em]">{SITE_CONFIG.name}</h3>
-              <p className="mt-4 max-w-md text-sm leading-7 text-[#72594a]">{SITE_CONFIG.description}</p>
+      <footer className="border-t border-[var(--editorial-line)] bg-[linear-gradient(180deg,rgba(255,253,246,0.98)_0%,rgba(244,247,241,1)_100%)] text-[var(--editorial-ink)]">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+          <div className="grid gap-8">
+            <div className="rounded-[2rem] border border-[var(--editorial-line)] bg-white/90 p-7 shadow-[0_20px_60px_rgba(27,46,60,0.07)]">
+              <h3 className="text-4xl font-semibold tracking-[-0.05em]">{SITE_CONFIG.name}</h3>
+              <p className="mt-4 max-w-md text-sm leading-7 text-[var(--editorial-muted)]">{SITE_CONFIG.description}</p>
+              {primaryTask ? (
+                <Link href={primaryTask.route} className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--editorial-ink)] px-4 py-2.5 text-sm font-semibold text-[var(--editorial-paper)] hover:bg-[#243847]">
+                  Continue reading
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              ) : null}
             </div>
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b6d5a]">Sections</h4>
-              <ul className="mt-4 space-y-3 text-sm">
-                {footerLinks.platform.map((item: any) => (
-                  <li key={item.name}><Link href={item.href} className="hover:text-[#2f1d16]">{item.name}</Link></li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b6d5a]">Company</h4>
-              <ul className="mt-4 space-y-3 text-sm">
-                {footerLinks.company.map((item) => (
-                  <li key={item.name}><Link href={item.href} className="hover:text-[#2f1d16]">{item.name}</Link></li>
-                ))}
-              </ul>
+          </div>
+          <div className="mt-10 flex flex-col gap-4 border-t border-[var(--editorial-line)] pt-6 text-sm text-[var(--editorial-muted)] md:flex-row md:items-center md:justify-between">
+            <p>&copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.</p>
+            <div className="flex flex-wrap gap-4">
+              <Link href="/help" className="hover:text-[var(--editorial-ink)]">Help Center</Link>
+              <Link href="/contact" className="hover:text-[var(--editorial-ink)]">Contact us</Link>
             </div>
           </div>
         </div>
@@ -179,8 +172,8 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr_0.8fr]">
           <div>
             <Link href="/" className="flex items-center gap-3">
-              <div className="h-11 w-11 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
-                <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="44" height="44" className="h-full w-full object-contain" />
+              <div className="h-11 w-11 overflow-hidden">
+                <img src="/favicon.png?v=20260424" alt={`${SITE_CONFIG.name} logo`} width="44" height="44" className="h-full w-full object-contain drop-shadow-[0_6px_14px_rgba(15,23,42,0.18)]" />
               </div>
               <div>
                 <span className="block text-lg font-semibold">{SITE_CONFIG.name}</span>
@@ -205,3 +198,4 @@ export function Footer() {
     </footer>
   )
 }
+
