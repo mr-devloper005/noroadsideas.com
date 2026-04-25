@@ -30,11 +30,11 @@ const taskTitles: Record<TaskKey, string[]> = {
     "City Center Apartment",
   ],
   article: [
-    "Scaling Local SEO in 2026",
-    "The Future of Directory Sites",
-    "Design Systems for Multi-Site",
-    "From MVP to Marketplace",
-    "Content Ops That Ship Fast",
+    "How India’s Independent Bookstores Are Building Reader Communities in 2026",
+    "What We Learned After Auditing 120 Long-Form Homepages for Readability",
+    "The New Rules of Newsletter Growth: Fewer Sends, Better Issues",
+    "Inside a Three-Person Editorial Workflow That Publishes Daily Without Burnout",
+    "Why Search Intent Beats Volume for Niche Publications",
   ],
   image: [
     "Golden Hour Interiors",
@@ -103,7 +103,7 @@ const taskCategories: Record<TaskKey, string[]> = {
 const summaryByTask: Record<TaskKey, string> = {
   listing: "Verified business listing with trusted details.",
   classified: "Fresh deal posted by a verified seller.",
-  article: "Long-form insight from industry experts.",
+  article: "Reported analysis, practical lessons, and editorial insight for modern publishing teams.",
   image: "Curated visual story and gallery.",
   profile: "Featured creator profile and highlights.",
   social: "Community update and engagement thread.",

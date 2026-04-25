@@ -1,7 +1,7 @@
 import { ContentImage } from "@/components/shared/content-image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MapPin, Globe, Phone, Tag, Mail } from "lucide-react";
+import { MapPin, Globe, Phone, Tag, Mail, BookOpen, MessageCircle, ArrowRight, FileText } from "lucide-react";
 import { NavbarShell } from "@/components/shared/navbar-shell";
 import { Footer } from "@/components/shared/footer";
 import { TaskPostCard } from "@/components/shared/task-post-card";
@@ -242,6 +242,231 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
           mapEmbedUrl={mapEmbedUrl}
           related={related}
         />
+        <Footer />
+      </div>
+    );
+  }
+
+  if (isArticle) {
+    return (
+      <div className="min-h-screen bg-[linear-gradient(180deg,#f7f8f0_0%,#ffffff_100%)] text-[var(--editorial-ink)]">
+        <NavbarShell />
+        <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <SchemaJsonLd data={schemaPayload} />
+          <Link
+            href={taskConfig?.route || "/"}
+            className="mb-6 inline-flex items-center text-sm text-[var(--editorial-muted)] hover:text-[var(--editorial-ink)]"
+          >
+            ← Back to {taskConfig?.label || "posts"}
+          </Link>
+
+          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+            <article className="space-y-6">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[var(--editorial-line)] bg-white/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--editorial-accent)]">
+                <BookOpen className="h-3.5 w-3.5" />
+                Feature story
+              </span>
+              <h1 className="text-5xl font-semibold leading-[1.05] tracking-[-0.06em]">{post.title}</h1>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--editorial-muted)]">
+                <span>By {articleAuthor}</span>
+                {articleDate ? <span>{articleDate}</span> : null}
+                <Badge variant="secondary" className="inline-flex items-center gap-1">
+                  <Tag className="h-3.5 w-3.5" />
+                  {category}
+                </Badge>
+              </div>
+              {postTags.length ? (
+                <div className="flex flex-wrap gap-2">
+                  {postTags.map((tag) => (
+                    <Badge key={tag} variant="outline">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              ) : null}
+              {articleSummary ? <p className="max-w-3xl text-base leading-8 text-[var(--editorial-muted)]">{articleSummary}</p> : null}
+              {images[0] ? (
+                <div className="relative aspect-[16/9] overflow-hidden rounded-[2rem] border border-[var(--editorial-line)] bg-white">
+                  <ContentImage src={images[0]} alt={`${post.title} featured image`} fill className="object-cover" intrinsicWidth={1600} intrinsicHeight={900} />
+                </div>
+              ) : null}
+              <RichContent html={articleHtml} className="prose prose-slate max-w-none leading-8 prose-p:my-6 prose-h2:my-8 prose-h3:my-6 prose-ul:my-6" />
+              <ArticleComments slug={post.slug} />
+            </article>
+
+            <aside className="space-y-6">
+              <div className="rounded-[2rem] border border-[var(--editorial-line)] bg-white/90 p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--editorial-muted)]">Reading note</p>
+                <p className="mt-4 text-sm leading-7 text-[var(--editorial-muted)]">Articles are given a wider reading column and a calmer side rail so the story, the image, and the notes all breathe.</p>
+              </div>
+              {related.length ? (
+                <div className="rounded-[2rem] border border-[var(--editorial-line)] bg-[rgba(53,88,114,0.04)] p-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--editorial-muted)]">More features</p>
+                  <div className="mt-5 space-y-4">
+                    {related.map((item) => (
+                      <Link key={item.id} href={buildPostUrl(task, item.slug)} className="block rounded-[1.35rem] border border-[var(--editorial-line)] bg-white p-4">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--editorial-muted)]">Related</p>
+                        <h3 className="mt-2 text-lg font-semibold">{item.title}</h3>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </aside>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (task === "pdf") {
+    const contentAny = content as Record<string, unknown>;
+    const fileUrl =
+      (typeof contentAny.fileUrl === "string" && contentAny.fileUrl) ||
+      (typeof contentAny.pdfUrl === "string" && contentAny.pdfUrl) ||
+      "";
+
+    return (
+      <div className="min-h-screen bg-[linear-gradient(180deg,#f1f5f7_0%,#ffffff_100%)] text-[var(--editorial-ink)]">
+        <NavbarShell />
+        <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <SchemaJsonLd data={breadcrumbSchema} />
+          <Link
+            href={taskConfig?.route || "/"}
+            className="mb-6 inline-flex items-center text-sm text-[var(--editorial-muted)] hover:text-[var(--editorial-ink)]"
+          >
+            ← Back to {taskConfig?.label || "posts"}
+          </Link>
+
+          <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr]">
+            <section className="space-y-6">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(53,88,114,0.16)] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#355872]">
+                <FileText className="h-3.5 w-3.5" />
+                Document viewer
+              </span>
+              <h1 className="text-4xl font-semibold leading-tight tracking-[-0.06em]">{post.title}</h1>
+              <p className="max-w-2xl text-sm leading-8 text-[#586b78]">{description}</p>
+              {fileUrl ? (
+                <div className="flex flex-wrap gap-3">
+                  <a href={fileUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-[#355872] px-5 py-3 text-sm font-semibold text-[#f7f8f0] hover:bg-[#2c4b62]">
+                    Download PDF
+                    <ArrowRight className="h-4 w-4" />
+                  </a>
+                  <Link href={taskConfig?.route || "/pdf"} className="inline-flex items-center gap-2 rounded-full border border-[rgba(53,88,114,0.16)] px-5 py-3 text-sm font-semibold text-[#355872]">
+                    Browse archive
+                  </Link>
+                </div>
+              ) : null}
+              <div className="grid gap-3 sm:grid-cols-3">
+                {["Reports", "Guides", "Downloads"].map((item) => (
+                  <div key={item} className="rounded-[1.35rem] border border-[rgba(53,88,114,0.16)] bg-white p-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#586b78]">Archive lane</p>
+                    <h3 className="mt-2 text-sm font-semibold">{item}</h3>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="rounded-[2rem] border border-[rgba(53,88,114,0.16)] bg-white p-4 shadow-[0_18px_50px_rgba(27,46,60,0.06)]">
+              {fileUrl ? (
+                <iframe
+                  title={post.title}
+                  src={`${fileUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                  className="h-[72vh] w-full rounded-[1.5rem]"
+                />
+              ) : (
+                <div className="flex h-[72vh] items-center justify-center rounded-[1.5rem] bg-[rgba(53,88,114,0.05)] text-sm text-[#586b78]">
+                  No PDF preview available.
+                </div>
+              )}
+            </section>
+          </div>
+
+          {related.length ? (
+            <section className="mt-12">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-xl font-semibold">More in this archive</h2>
+                <Link href={taskConfig?.route || "/pdf"} className="text-sm text-[#586b78] hover:text-[#355872]">
+                  View all
+                </Link>
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                {related.map((item) => (
+                  <TaskPostCard key={item.id} post={item} href={buildPostUrl(task, item.slug)} taskKey={task} compact />
+                ))}
+              </div>
+            </section>
+          ) : null}
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (task === "social") {
+    return (
+      <div className="min-h-screen bg-[linear-gradient(180deg,#eef4f6_0%,#ffffff_100%)] text-[var(--editorial-ink)]">
+        <NavbarShell />
+        <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <SchemaJsonLd data={schemaPayload} />
+          <Link
+            href={taskConfig?.route || "/"}
+            className="mb-6 inline-flex items-center text-sm text-[var(--editorial-muted)] hover:text-[var(--editorial-ink)]"
+          >
+            ← Back to {taskConfig?.label || "posts"}
+          </Link>
+
+          <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-start">
+            <section className="space-y-6">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(53,88,114,0.14)] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#355872]">
+                <MessageCircle className="h-3.5 w-3.5" />
+                Bulletin post
+              </span>
+              <h1 className="text-4xl font-semibold leading-tight tracking-[-0.06em]">{post.title}</h1>
+              <div className="flex flex-wrap items-center gap-3 text-sm text-[#586b78]">
+                <Badge variant="secondary" className="inline-flex items-center gap-1">
+                  <Tag className="h-3.5 w-3.5" />
+                  {category}
+                </Badge>
+                {location ? (
+                  <span className="inline-flex items-center gap-1">
+                    <MapPin className="h-4 w-4" />
+                    {location}
+                  </span>
+                ) : null}
+              </div>
+              <p className="max-w-2xl text-sm leading-8 text-[#586b78]">{description}</p>
+              {descriptionHtml ? <RichContent html={descriptionHtml} className="max-w-3xl" /> : null}
+            </section>
+
+            <aside className="space-y-4">
+              <div className="rounded-[2rem] border border-[rgba(53,88,114,0.14)] bg-white p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#586b78]">Community cues</p>
+                <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                  {["Updates", "Links", "Replies"].map((item) => (
+                    <div key={item} className="rounded-[1.35rem] bg-[rgba(156,213,255,0.08)] p-4">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#586b78]">Mode</p>
+                      <h3 className="mt-2 text-sm font-semibold">{item}</h3>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {related.length ? (
+                <div className="rounded-[2rem] border border-[rgba(53,88,114,0.14)] bg-white p-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#586b78]">More posts</p>
+                  <div className="mt-4 space-y-3">
+                    {related.map((item) => (
+                      <Link key={item.id} href={buildPostUrl(task, item.slug)} className="block rounded-[1.35rem] border border-[rgba(53,88,114,0.12)] bg-[rgba(53,88,114,0.03)] p-4">
+                        <h3 className="text-base font-semibold">{item.title}</h3>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </aside>
+          </div>
+        </main>
         <Footer />
       </div>
     );

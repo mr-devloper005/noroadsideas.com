@@ -4,6 +4,7 @@ import { SITE_CONFIG, type TaskKey, getTaskConfig } from "./site-config";
 import { fetchSiteBootstrap, type SitePost } from "./site-connector";
 
 const baseUrl = SITE_CONFIG.baseUrl.replace(/\/$/, "");
+const FAVICON_VERSION = "20260424";
 
 export const canonicalForPath = (path = "/") =>
   `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
@@ -255,6 +256,11 @@ export async function buildSiteMetadata(): Promise<Metadata> {
       title: siteTitle,
       description: siteDescription,
       images: [ctx.exact?.ogImage || ctx.defaultOgImage],
+    },
+    icons: {
+      icon: `/favicon.png?v=${FAVICON_VERSION}`,
+      apple: `/apple-icon.png?v=${FAVICON_VERSION}`,
+      shortcut: `/favicon.png?v=${FAVICON_VERSION}`,
     },
   };
 }

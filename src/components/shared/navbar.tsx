@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Search, Menu, X, User, FileText, Building2, LayoutGrid, Tag, Image as ImageIcon, ChevronRight, Sparkles, MapPin, Plus } from 'lucide-react'
+import { Search, Menu, X, User, FileText, Building2, LayoutGrid, Tag, Image as ImageIcon, ChevronRight, Sparkles, MapPin, Plus, BookOpen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/lib/auth-context'
 import { SITE_CONFIG, type TaskKey } from '@/lib/site-config'
@@ -31,10 +31,12 @@ const taskIcons: Record<TaskKey, any> = {
   comment: FileText,
 }
 
+const editorialPrimaryNav = [{ name: 'Articles', href: '/articles', icon: BookOpen }] as const
+
 const variantClasses = {
   'compact-bar': {
     shell: 'border-b border-slate-200/80 bg-white/88 text-slate-950 backdrop-blur-xl',
-    logo: 'rounded-2xl border border-slate-200 bg-white shadow-sm',
+    logo: '',
     active: 'bg-slate-950 text-white',
     idle: 'text-slate-600 hover:bg-slate-100 hover:text-slate-950',
     cta: 'rounded-full bg-slate-950 text-white hover:bg-slate-800',
@@ -42,7 +44,7 @@ const variantClasses = {
   },
   'editorial-bar': {
     shell: 'border-b border-[#d7c4b3] bg-[#fff7ee]/90 text-[#2f1d16] backdrop-blur-xl',
-    logo: 'rounded-full border border-[#dbc6b6] bg-white shadow-sm',
+    logo: '',
     active: 'bg-[#2f1d16] text-[#fff4e4]',
     idle: 'text-[#72594a] hover:bg-[#f2e5d4] hover:text-[#2f1d16]',
     cta: 'rounded-full bg-[#2f1d16] text-[#fff4e4] hover:bg-[#452920]',
@@ -50,7 +52,7 @@ const variantClasses = {
   },
   'floating-bar': {
     shell: 'border-b border-transparent bg-transparent text-white',
-    logo: 'rounded-[1.35rem] border border-white/12 bg-white/8 shadow-[0_16px_48px_rgba(15,23,42,0.22)] backdrop-blur',
+    logo: '',
     active: 'bg-[#8df0c8] text-[#07111f]',
     idle: 'text-slate-200 hover:bg-white/10 hover:text-white',
     cta: 'rounded-full bg-[#8df0c8] text-[#07111f] hover:bg-[#77dfb8]',
@@ -58,7 +60,7 @@ const variantClasses = {
   },
   'utility-bar': {
     shell: 'border-b border-[#d7deca] bg-[#f4f6ef]/94 text-[#1f2617] backdrop-blur-xl',
-    logo: 'rounded-xl border border-[#d7deca] bg-white shadow-sm',
+    logo: '',
     active: 'bg-[#1f2617] text-[#edf5dc]',
     idle: 'text-[#56604b] hover:bg-[#e7edd9] hover:text-[#1f2617]',
     cta: 'rounded-lg bg-[#1f2617] text-[#edf5dc] hover:bg-[#2f3a24]',
@@ -69,7 +71,7 @@ const variantClasses = {
 const directoryPalette = {
   'directory-clean': {
     shell: 'border-b border-slate-200 bg-white/94 text-slate-950 shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-xl',
-    logo: 'rounded-2xl border border-slate-200 bg-slate-50',
+    logo: '',
     nav: 'text-slate-600 hover:text-slate-950',
     search: 'border border-slate-200 bg-slate-50 text-slate-600',
     cta: 'bg-slate-950 text-white hover:bg-slate-800',
@@ -78,7 +80,7 @@ const directoryPalette = {
   },
   'market-utility': {
     shell: 'border-b border-[#d7deca] bg-[#f4f6ef]/96 text-[#1f2617] shadow-[0_1px_0_rgba(64,76,34,0.06)] backdrop-blur-xl',
-    logo: 'rounded-xl border border-[#d7deca] bg-white',
+    logo: '',
     nav: 'text-[#56604b] hover:text-[#1f2617]',
     search: 'border border-[#d7deca] bg-white text-[#56604b]',
     cta: 'bg-[#1f2617] text-[#edf5dc] hover:bg-[#2f3a24]',
@@ -104,7 +106,7 @@ export function Navbar() {
     href: task.route,
     icon: taskIcons[task.key] || LayoutGrid,
   }))
-  const primaryTask = SITE_CONFIG.tasks.find((task) => task.key === recipe.primaryTask && task.enabled) || primaryNavigation[0]
+  const primaryTask = SITE_CONFIG.tasks.find((task) => task.key === recipe.primaryTask && task.enabled) || SITE_CONFIG.tasks.find((task) => task.key === 'article') || navigation[0]
   const isDirectoryProduct = recipe.homeLayout === 'listing-home' || recipe.homeLayout === 'classified-home'
 
   if (isDirectoryProduct) {
@@ -115,8 +117,8 @@ export function Navbar() {
         <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-4">
             <Link href="/" className="flex shrink-0 items-center gap-3">
-              <div className={cn('flex h-12 w-12 items-center justify-center overflow-hidden p-1.5', palette.logo)}>
-                <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+              <div className={cn('flex h-12 w-12 items-center justify-center overflow-hidden', palette.logo)}>
+                <img src="/favicon.png?v=20260424" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain drop-shadow-[0_6px_14px_rgba(15,23,42,0.18)]" />
               </div>
               <div className="min-w-0 hidden sm:block">
                 <span className="block truncate text-xl font-semibold">{SITE_CONFIG.name}</span>
@@ -205,13 +207,95 @@ export function Navbar() {
   const isEditorial = recipe.navbar === 'editorial-bar'
   const isUtility = recipe.navbar === 'utility-bar'
 
+  if (isEditorial) {
+    return (
+      <header className={cn('sticky top-0 z-50 w-full border-b border-[var(--editorial-line)] bg-[rgba(247,248,240,0.88)] text-[var(--editorial-ink)] backdrop-blur-xl')}>
+        <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+          <div className="flex min-w-0 flex-1 items-center gap-4 lg:gap-6">
+            <Link href="/" className="flex shrink-0 items-center gap-3 whitespace-nowrap pr-2">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden">
+                <img src="/favicon.png?v=20260424" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain drop-shadow-[0_6px_14px_rgba(15,23,42,0.18)]" />
+              </div>
+              <div className="min-w-0 hidden sm:block">
+                <span className="block truncate text-xl font-semibold tracking-[-0.04em]">{SITE_CONFIG.name}</span>
+                <span className="hidden text-[10px] uppercase tracking-[0.3em] opacity-70 sm:block">{siteContent.navbar.tagline}</span>
+              </div>
+            </Link>
+
+            <div className="hidden min-w-0 flex-1 items-center gap-2 xl:flex">
+              {editorialPrimaryNav.map((item) => {
+                const isActive = pathname.startsWith(item.href)
+                return (
+                  <Link key={item.name} href={item.href} className={cn('inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors', isActive ? 'bg-[var(--editorial-ink)] text-[var(--editorial-paper)]' : 'text-[var(--editorial-muted)] hover:bg-[rgba(53,88,114,0.08)] hover:text-[var(--editorial-ink)]')}>
+                    <item.icon className="h-4 w-4" />
+                    {item.name}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="hidden min-w-0 flex-1 items-center justify-center lg:flex">
+            <Link href="/search" className="flex w-full max-w-lg items-center gap-3 rounded-full border border-[var(--editorial-line)] bg-white/80 px-4 py-3 text-sm text-[var(--editorial-muted)] shadow-sm transition hover:bg-white">
+              <Search className="h-4 w-4" />
+              <span>Search articles</span>
+            </Link>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            {isAuthenticated ? (
+              <NavbarAuthControls />
+            ) : (
+              <div className="hidden items-center gap-2 md:flex">
+                <Button variant="ghost" size="sm" asChild className="rounded-full px-4">
+                  <Link href="/login">Sign in</Link>
+                </Button>
+                <Button size="sm" asChild className="rounded-full bg-[var(--editorial-ink)] text-[var(--editorial-paper)] hover:bg-[#243847]">
+                  <Link href="/register">
+                    <Plus className="mr-1 h-4 w-4" />
+                    Start reading
+                  </Link>
+                </Button>
+              </div>
+            )}
+
+            <Button variant="ghost" size="icon" className="rounded-full lg:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
+        </nav>
+
+        {isMobileMenuOpen && (
+          <div className="border-t border-[var(--editorial-line)] bg-[rgba(247,248,240,0.98)]">
+            <div className="space-y-2 px-4 py-4 sm:px-6">
+              <Link href="/search" onClick={() => setIsMobileMenuOpen(false)} className="mb-2 flex items-center gap-3 rounded-2xl border border-[var(--editorial-line)] bg-white px-4 py-3 text-sm font-medium text-[var(--editorial-muted)]">
+                <Search className="h-4 w-4" />
+                Search articles
+              </Link>
+
+              {editorialPrimaryNav.map((item) => {
+                const isActive = pathname.startsWith(item.href)
+                return (
+                  <Link key={item.name} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className={cn('flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition-colors', isActive ? 'bg-[var(--editorial-ink)] text-[var(--editorial-paper)]' : 'bg-white text-[var(--editorial-ink)]')}>
+                    <item.icon className="h-5 w-5" />
+                    {item.name}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        )}
+      </header>
+    )
+  }
+
   return (
     <header className={cn('sticky top-0 z-50 w-full', style.shell)}>
       <nav className={cn('mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8', isFloating ? 'h-24 pt-4' : 'h-20')}>
         <div className="flex min-w-0 flex-1 items-center gap-4 lg:gap-7">
           <Link href="/" className="flex shrink-0 items-center gap-3 whitespace-nowrap pr-2">
-            <div className={cn('flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden p-1.5', style.logo)}>
-              <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+            <div className={cn('flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden', style.logo)}>
+              <img src="/favicon.png?v=20260424" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain drop-shadow-[0_6px_14px_rgba(15,23,42,0.18)]" />
             </div>
             <div className="min-w-0 hidden sm:block">
               <span className="block truncate text-xl font-semibold">{SITE_CONFIG.name}</span>
@@ -309,7 +393,7 @@ export function Navbar() {
       {isFloating && primaryTask ? (
         <div className="mx-auto hidden max-w-7xl px-4 pb-3 sm:px-6 lg:block lg:px-8">
           <Link href={primaryTask.route} className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-200 backdrop-blur hover:bg-white/12">
-            Featured surface
+            Surface
             <span>{primaryTask.label}</span>
             <ChevronRight className="h-3.5 w-3.5" />
           </Link>
@@ -338,3 +422,4 @@ export function Navbar() {
     </header>
   )
 }
+
