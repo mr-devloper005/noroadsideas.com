@@ -1,10 +1,11 @@
 import Link from 'next/link'
-import { ArrowRight, Building2, FileText, Image as ImageIcon, LayoutGrid, Tag, User } from 'lucide-react'
+import { ArrowRight, Building2, FileText, Image as ImageIcon, LayoutGrid, Tag, User, MessageCircle } from 'lucide-react'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
+import { TaskPostCard } from '@/components/shared/task-post-card'
 import { TaskListClient } from '@/components/tasks/task-list-client'
 import { SchemaJsonLd } from '@/components/seo/schema-jsonld'
-import { fetchTaskPosts } from '@/lib/task-data'
+import { buildPostUrl, fetchTaskPosts } from '@/lib/task-data'
 import { SITE_CONFIG, getTaskConfig, type TaskKey } from '@/lib/site-config'
 import { CATEGORY_OPTIONS, normalizeCategory } from '@/lib/categories'
 import { taskIntroCopy } from '@/config/site.content'
@@ -45,7 +46,7 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
   }
 
   const taskConfig = getTaskConfig(task)
-  const posts = await fetchTaskPosts(task, 30)
+  const posts = await fetchTaskPosts(task, 30, { allowMockFallback: task === 'article' })
   const normalizedCategory = category ? normalizeCategory(category) : 'all'
   const intro = taskIntroCopy[task]
   const baseUrl = SITE_CONFIG.baseUrl.replace(/\/$/, '')
@@ -57,7 +58,17 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
   }))
   const { recipe } = getFactoryState()
   const layoutKey = recipe.taskLayouts[task as keyof typeof recipe.taskLayouts] || `${task}-${task === 'listing' ? 'directory' : 'editorial'}`
-  const shellClass = variantShells[layoutKey as keyof typeof variantShells] || 'bg-background'
+  const isArticleTask = task === 'article'
+  const isPdfTask = task === 'pdf'
+  const isSocialTask = task === 'social'
+  const shellClass =
+    isArticleTask
+      ? 'bg-[radial-gradient(circle_at_top_left,rgba(122,170,206,0.14),transparent_24%),linear-gradient(180deg,#f7f8f0_0%,#ffffff_100%)]'
+      : isPdfTask
+        ? 'bg-[radial-gradient(circle_at_top_left,rgba(53,88,114,0.1),transparent_22%),linear-gradient(180deg,#f1f5f7_0%,#ffffff_100%)]'
+        : isSocialTask
+          ? 'bg-[radial-gradient(circle_at_top_left,rgba(156,213,255,0.14),transparent_24%),linear-gradient(180deg,#eef4f6_0%,#ffffff_100%)]'
+          : variantShells[layoutKey as keyof typeof variantShells] || 'bg-background'
   const Icon = taskIcons[task] || LayoutGrid
 
   const isDark = ['image-masonry', 'image-portfolio', 'profile-creator'].includes(layoutKey)
@@ -69,13 +80,29 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
         input: 'border-white/10 bg-white/6 text-white',
         button: 'bg-white text-slate-950 hover:bg-slate-200',
       }
-    : layoutKey.startsWith('article') || layoutKey.startsWith('sbm')
+    : isArticleTask
       ? {
-          muted: 'text-[#72594a]',
-          panel: 'border border-[#dbc6b6] bg-white/90',
-          soft: 'border border-[#dbc6b6] bg-[#fff8ef]',
-          input: 'border border-[#dbc6b6] bg-white text-[#2f1d16]',
-          button: 'bg-[#2f1d16] text-[#fff4e4] hover:bg-[#452920]',
+          muted: 'text-[var(--editorial-muted)]',
+          panel: 'border border-[var(--editorial-line)] bg-white/90',
+          soft: 'border border-[var(--editorial-line)] bg-[rgba(53,88,114,0.04)]',
+          input: 'border border-[var(--editorial-line)] bg-white text-[var(--editorial-ink)]',
+          button: 'bg-[var(--editorial-ink)] text-[var(--editorial-paper)] hover:bg-[#243847]',
+        }
+      : isPdfTask
+        ? {
+          muted: 'text-[#586b78]',
+          panel: 'border border-[rgba(53,88,114,0.16)] bg-white',
+          soft: 'border border-[rgba(53,88,114,0.16)] bg-[rgba(122,170,206,0.06)]',
+          input: 'border border-[rgba(53,88,114,0.16)] bg-white text-[#172633]',
+          button: 'bg-[#355872] text-[#f7f8f0] hover:bg-[#2c4b62]',
+        }
+      : isSocialTask
+        ? {
+          muted: 'text-[#536475]',
+          panel: 'border border-[rgba(53,88,114,0.14)] bg-white/95',
+          soft: 'border border-[rgba(53,88,114,0.14)] bg-[rgba(156,213,255,0.08)]',
+          input: 'border border-[rgba(53,88,114,0.14)] bg-white text-[#172633]',
+          button: 'bg-[#355872] text-[#f7f8f0] hover:bg-[#2c4b62]',
         }
       : {
           muted: 'text-slate-600',
@@ -84,6 +111,7 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           input: 'border border-slate-200 bg-white text-slate-950',
           button: 'bg-slate-950 text-white hover:bg-slate-800',
         }
+  const featuredPosts = posts.slice(0, 3)
 
   return (
     <div className={`min-h-screen ${shellClass}`}>
@@ -146,25 +174,58 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           </section>
         ) : null}
 
-        {layoutKey === 'article-editorial' || layoutKey === 'article-journal' ? (
-          <section className="mb-12 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+        {isArticleTask ? (
+          <section className="mb-12">
+            <h1 className="max-w-4xl text-5xl font-semibold tracking-[-0.05em] text-foreground">{taskConfig?.description || 'Latest posts'}</h1>
+            <p className={`mt-5 max-w-2xl text-sm leading-8 ${ui.muted}`}>Articles get more breathing room, stronger hierarchy, and a reading rhythm that feels intentionally editorial rather than feed-like.</p>
+          </section>
+        ) : null}
+
+        {isPdfTask ? (
+          <section className="mb-12 grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-start">
             <div>
-              <p className={`text-xs uppercase tracking-[0.3em] ${ui.muted}`}>{taskConfig?.label || task}</p>
-              <h1 className="mt-3 max-w-4xl text-5xl font-semibold tracking-[-0.05em] text-foreground">{taskConfig?.description || 'Latest posts'}</h1>
-              <p className={`mt-5 max-w-2xl text-sm leading-8 ${ui.muted}`}>This reading surface uses slower pacing, stronger typographic hierarchy, and more breathing room so long-form content feels intentional rather than squeezed into a generic feed.</p>
+              <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] ${ui.soft}`}>
+                <FileText className="h-3.5 w-3.5" />
+                PDF archive
+              </span>
+              <h1 className="mt-4 max-w-4xl text-5xl font-semibold tracking-[-0.05em] text-foreground">{taskConfig?.description || 'Latest posts'}</h1>
+              <p className={`mt-5 max-w-2xl text-sm leading-8 ${ui.muted}`}>Document-style posts use a cleaner archive rhythm, with denser metadata and a lighter card system that feels closer to a library than a feed.</p>
             </div>
             <div className={`rounded-[2rem] p-6 ${ui.panel}`}>
-              <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${ui.muted}`}>Reading note</p>
-              <p className={`mt-4 text-sm leading-7 ${ui.muted}`}>Use category filters to jump between topics without collapsing the page into the same repeated card rhythm used by other task types.</p>
-              <form className="mt-5 flex items-center gap-3" action={taskConfig?.route || '#'}>
-                <select name="category" defaultValue={normalizedCategory} className={`h-11 flex-1 rounded-xl px-3 text-sm ${ui.input}`}>
-                  <option value="all">All categories</option>
-                  {CATEGORY_OPTIONS.map((item) => (
-                    <option key={item.slug} value={item.slug}>{item.name}</option>
-                  ))}
-                </select>
-                <button type="submit" className={`h-11 rounded-xl px-4 text-sm font-medium ${ui.button}`}>Apply</button>
-              </form>
+              <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${ui.muted}`}>Archive filters</p>
+              <p className={`mt-4 text-sm leading-7 ${ui.muted}`}>Use category filters to narrow the archive and keep the document lane easier to scan.</p>
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                {['Reports', 'Guides', 'Downloads'].map((item) => (
+                  <div key={item} className={`rounded-[1.4rem] p-4 ${ui.soft}`}>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] opacity-70">Section</p>
+                    <h3 className="mt-2 text-sm font-semibold leading-6">{item}</h3>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
+
+        {isSocialTask ? (
+          <section className="mb-12 grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-start">
+            <div>
+              <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] ${ui.soft}`}>
+                <MessageCircle className="h-3.5 w-3.5" />
+                Bulletin board
+              </span>
+              <h1 className="mt-4 max-w-4xl text-5xl font-semibold tracking-[-0.05em] text-foreground">{taskConfig?.description || 'Latest posts'}</h1>
+              <p className={`mt-5 max-w-2xl text-sm leading-8 ${ui.muted}`}>Short updates sit in a calmer bulletin layout so community signals feel present without overpowering the editorial read.</p>
+            </div>
+            <div className={`rounded-[2rem] p-6 ${ui.panel}`}>
+              <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${ui.muted}`}>Community cues</p>
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                {['Updates', 'Links', 'Replies'].map((item) => (
+                  <div key={item} className={`rounded-[1.4rem] p-4 ${ui.soft}`}>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] opacity-70">Mode</p>
+                    <h3 className="mt-2 text-sm font-semibold leading-6">{item}</h3>
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
         ) : null}
@@ -243,9 +304,36 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
             {intro.paragraphs.map((paragraph) => (
               <p key={paragraph.slice(0, 40)} className={`mt-4 text-sm leading-7 ${ui.muted}`}>{paragraph}</p>
             ))}
-            <div className="mt-4 flex flex-wrap gap-4 text-sm">
-              {intro.links.map((link) => (
-                <a key={link.href} href={link.href} className="font-semibold text-foreground hover:underline">{link.label}</a>
+            {task !== 'article' ? (
+              <div className="mt-4 flex flex-wrap gap-4 text-sm">
+                {intro.links.map((link) => (
+                  <a key={link.href} href={link.href} className="font-semibold text-foreground hover:underline">{link.label}</a>
+                ))}
+              </div>
+            ) : null}
+          </section>
+        ) : null}
+
+        {featuredPosts.length && (isArticleTask || isPdfTask || isSocialTask) ? (
+          <section className="mb-12">
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <div>
+                <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${ui.muted}`}>Featured selection</p>
+                <h2 className="mt-2 text-2xl font-semibold text-foreground">Three posts that set the tone for this section</h2>
+              </div>
+              <Link href={taskConfig?.route || '#'} className={`hidden text-sm font-semibold ${ui.muted} hover:text-foreground sm:inline-flex`}>
+                Open all
+              </Link>
+            </div>
+            <div className={isPdfTask ? 'grid gap-4 md:grid-cols-3' : isSocialTask ? 'grid gap-4 md:grid-cols-3 lg:grid-cols-3' : 'grid gap-6 md:grid-cols-3'}>
+              {featuredPosts.map((post) => (
+                <TaskPostCard
+                  key={post.id}
+                  post={post}
+                  href={buildPostUrl(task, post.slug)}
+                  taskKey={task}
+                  compact={isPdfTask || isSocialTask}
+                />
               ))}
             </div>
           </section>

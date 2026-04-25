@@ -1,10 +1,10 @@
 export const siteIdentity = {
   code: process.env.NEXT_PUBLIC_SITE_CODE || '5qg7dh9200',
   name: process.env.NEXT_PUBLIC_SITE_NAME || 'Noroadsideas',
-  tagline: process.env.NEXT_PUBLIC_SITE_TAGLINE || 'Article platform',
+  tagline: process.env.NEXT_PUBLIC_SITE_TAGLINE || 'Editorial reading room',
   description:
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
-    'An article-led publishing platform for insights, stories, guides, and long-form discovery.',
+    'An article-led publication for essays, notes, resources, and slower discovery.',
   domain: process.env.NEXT_PUBLIC_SITE_DOMAIN || 'noroadsideas.com',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://noroadsideas.com',
   ogImage: process.env.NEXT_PUBLIC_SITE_OG_IMAGE || '/og-default.png',

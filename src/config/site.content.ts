@@ -2,75 +2,75 @@ import type { TaskKey } from '@/lib/site-config'
 
 export const siteContent = {
   navbar: {
-    tagline: 'Independent reading platform',
+    tagline: 'Independent reading desk',
   },
   footer: {
-    tagline: 'Stories, resources, and discoverable posts',
+    tagline: 'Articles, notes, and supporting resources',
   },
   hero: {
-    badge: 'Latest stories and visuals',
+    badge: 'Independent editorial desk',
     title: ['A thoughtful home for', 'stories, visuals, and discovery.'],
     description:
-      'Explore fresh articles, image-led posts, and discoverable content across the platform through a calmer and clearer browsing experience.',
+      'Read essays, open resources, and move through the archive with a calmer publication-style experience.',
     primaryCta: {
-      label: 'Read latest stories',
+      label: 'Read featured article',
       href: '/articles',
     },
     secondaryCta: {
-      label: 'Explore visuals',
-      href: '/images',
+      label: 'Open PDF library',
+      href: '/pdf',
     },
-    searchPlaceholder: 'Search stories, visuals, listings, and more',
-    focusLabel: 'Focus',
-    featureCardBadge: 'latest cover rotation',
-    featureCardTitle: 'Latest posts shape the visual identity of the homepage.',
+    searchPlaceholder: 'Search articles',
+    focusLabel: 'Feature',
+    featureCardBadge: 'lead story',
+    featureCardTitle: 'A publication-style homepage keeps reading at the center.',
     featureCardDescription:
-      'Recent images and stories stay at the center of the experience without changing any core platform behavior.',
+      'The layout gives primary and secondary tasks the spotlight while keeping supporting sections accessible but quieter.',
   },
   home: {
     metadata: {
-      title: 'Stories, visuals, and discoverable content',
+      title: 'Editorial articles and resource library',
       description:
-        'Explore articles, images, listings, and curated posts through a cleaner reading-first experience.',
-      openGraphTitle: 'Stories, visuals, and discoverable content',
+        'Explore articles, PDF resources, and supporting community pages through a clearer editorial experience.',
+      openGraphTitle: 'Editorial articles and resource library',
       openGraphDescription:
-        'Discover articles, visual posts, and connected content through a calmer reading-first experience.',
-      keywords: ['story platform', 'article site', 'visual content', 'content discovery'],
+        'Discover article-first reading, document resources, and quieter supporting sections through a refined editorial layout.',
+      keywords: ['article site', 'editorial homepage', 'pdf library', 'reading desk'],
     },
-    introBadge: 'About the platform',
-    introTitle: 'Built for reading, browsing, and connecting different kinds of content.',
+    introBadge: 'Editorial direction',
+    introTitle: 'Built like a publication with a clear lead story and a quieter archive.',
     introParagraphs: [
-      'This site brings together article-style reading, visual browsing, and structured discovery so visitors can move naturally between different content types.',
-      'Instead of separating stories, visuals, and supporting resources into disconnected surfaces, the platform keeps them connected in one place with consistent navigation and easier exploration.',
-      'Whether someone starts with a story, an image-led post, a listing, or a resource page, they can keep discovering related content without friction.',
+      'This site centers articles first, then layers in document resources and supporting community pages so the homepage feels authored rather than assembled.',
+      'The design avoids a generic content-feed rhythm by giving the lead story, the archive, and the resource shelf their own pacing and whitespace.',
+      'Supporting sections stay accessible through navigation, search, and footer links, but they no longer compete with the primary reading path.',
     ],
     sideBadge: 'At a glance',
     sidePoints: [
-      'Reading-first homepage with stronger emphasis on stories and imagery.',
-      'Connected sections for articles, visuals, listings, and supporting resources.',
-      'Cleaner browsing rhythm designed to make exploration feel easier.',
-      'Lightweight interactions that keep the experience fast and readable.',
+      'Article-first homepage with a publication cover feel.',
+      'PDF resources highlighted as the secondary reading lane.',
+      'Community and bookmark surfaces moved into quieter navigation.',
+      'Lightweight motion and high-contrast typography for readability.',
     ],
     primaryLink: {
       label: 'Browse articles',
       href: '/articles',
     },
     secondaryLink: {
-      label: 'See visuals',
-      href: '/images',
+      label: 'Open PDFs',
+      href: '/pdf',
     },
   },
   cta: {
-    badge: 'Start exploring',
-    title: 'Explore articles, visuals, and resources through one connected experience.',
+    badge: 'Start reading',
+    title: 'Explore articles, PDF resources, and supporting pages through one connected editorial system.',
     description:
-      'Move between articles, image-led posts, listings, and resources through one clearer and more connected visual system.',
+      'Move between essays, documents, and quieter support pages without losing the reading rhythm.',
     primaryCta: {
-      label: 'Get Started Free',
+      label: 'Get started',
       href: '/register',
     },
     secondaryCta: {
-      label: 'Contact Sales',
+      label: 'Contact',
       href: '/contact',
     },
   },
@@ -78,10 +78,10 @@ export const siteContent = {
   taskSectionDescriptionSuffix: 'Browse the newest posts in this section.',
 } as const
 
-export const taskPageMetadata: Record<Exclude<TaskKey, 'comment' | 'org' | 'social'>, { title: string; description: string }> = {
+export const taskPageMetadata: Record<Exclude<TaskKey, 'comment' | 'org'>, { title: string; description: string }> = {
   article: {
-    title: 'Articles and stories',
-    description: 'Read articles, stories, guides, and long-form posts across topics and interests.',
+    title: 'Articles and features',
+    description: 'Read essays, features, and long-form writing with a calmer publication rhythm.',
   },
   listing: {
     title: 'Listings and discoverable pages',
@@ -101,11 +101,15 @@ export const taskPageMetadata: Record<Exclude<TaskKey, 'comment' | 'org' | 'soci
   },
   sbm: {
     title: 'Curated links and saved resources',
-    description: 'Browse useful links, saved references, and curated resources organized for discovery.',
+    description: 'Browse useful links, saved references, and curated resources organized for slower discovery.',
   },
   pdf: {
     title: 'PDFs and downloadable resources',
-    description: 'Open reports, documents, and downloadable resources shared across the platform.',
+    description: 'Open reports, documents, and downloadable reading material from the archive.',
+  },
+  social: {
+    title: 'Community notes and short updates',
+    description: 'Browse short updates, link posts, and community signals with a quieter bulletin rhythm.',
   },
 }
 
@@ -127,16 +131,16 @@ export const taskIntroCopy: Record<
     ],
   },
   article: {
-    title: 'Articles, stories, and long-form reading',
+    title: 'Articles, essays, and long-form reading',
     paragraphs: [
-      'This section is built for stories, explainers, guides, and long-form reading across topics and interests.',
-      'Articles connect with listings, images, resources, and other content types so deeper reading can lead naturally into related discovery.',
-      'Use this section to browse thoughtful posts, revisit useful writing, and move into supporting content when you want more context.',
+      'This section is built for essays, explainers, criticism, and slower reading across topics and interests.',
+      'Articles connect with PDF resources and support pages so deeper reading can lead naturally into related material.',
+      'Use this section to browse thoughtful posts, revisit useful writing, and move into the archive when you want more context.',
     ],
     links: [
-      { label: 'Explore listings', href: '/listings' },
-      { label: 'Open images', href: '/images' },
-      { label: 'Browse resources', href: '/pdf' },
+      { label: 'Open PDFs', href: '/pdf' },
+      { label: 'Read community notes', href: '/community' },
+      { label: 'Browse bookmarks', href: '/sbm' },
     ],
   },
   classified: {
@@ -182,39 +186,39 @@ export const taskIntroCopy: Record<
     title: 'Curated links and bookmarked resources',
     paragraphs: [
       'This section collects useful links, references, tools, and saved resources in a text-first browsing format.',
-      'Bookmarks stay connected to the rest of the platform, making it easier to move from a saved link into related stories, listings, or resources.',
-      'Use this section to organize helpful sources and discover connected content without leaving the broader site experience.',
+      'Bookmarks stay connected to the rest of the site, making it easier to move from a saved link into related articles or PDFs.',
+      'Use this section to organize helpful sources and discover connected content without leaving the broader reading experience.',
     ],
     links: [
       { label: 'Browse articles', href: '/articles' },
-      { label: 'Explore listings', href: '/listings' },
       { label: 'Open PDFs', href: '/pdf' },
+      { label: 'Community', href: '/community' },
     ],
   },
   pdf: {
     title: 'PDFs, documents, and downloadable files',
     paragraphs: [
       'The PDF library hosts reports, guides, downloadable files, and longer-form document resources that support reading and discovery.',
-      'These resources work alongside stories, listings, and profiles, helping document-style content stay connected to the rest of the platform.',
+      'These resources work alongside articles and community notes, helping document-style content stay connected to the rest of the publication.',
       'Browse by category to find relevant files quickly, then continue into related sections when you want more context.',
     ],
     links: [
       { label: 'Read articles', href: '/articles' },
-      { label: 'See listings', href: '/listings' },
-      { label: 'Explore profiles', href: '/profile' },
+      { label: 'Open community', href: '/community' },
+      { label: 'Browse bookmarks', href: '/sbm' },
     ],
   },
   social: {
     title: 'Short updates and community signals',
     paragraphs: [
-      'Short updates add quick signals that keep activity flowing across the platform.',
-      'They work well with stories, listings, and resources by helping visitors move from brief updates into deeper content.',
+      'Short updates add quick signals that keep activity flowing without taking over the reading experience.',
+      'They work well with articles and PDF resources by helping visitors move from brief notes into deeper content.',
       'Use these posts as lightweight entry points into the broader site experience.',
     ],
     links: [
-      { label: 'Open listings', href: '/listings' },
       { label: 'Read articles', href: '/articles' },
       { label: 'View PDFs', href: '/pdf' },
+      { label: 'Browse bookmarks', href: '/sbm' },
     ],
   },
   comment: {
