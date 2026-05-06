@@ -6,14 +6,12 @@ import { getFactoryState } from '@/design/factory/get-factory-state'
 import { FOOTER_OVERRIDE_ENABLED, FooterOverride } from '@/overrides/footer'
 
 const taskIcons: Record<TaskKey, any> = {
-  article: FileText,
   listing: Building2,
-  sbm: LayoutGrid,
   classified: Tag,
+  article: FileText,
   image: ImageIcon,
-  profile: User,
+  sbm: LayoutGrid,
   social: LayoutGrid,
-  pdf: FileText,
   org: Building2,
   comment: FileText,
 }

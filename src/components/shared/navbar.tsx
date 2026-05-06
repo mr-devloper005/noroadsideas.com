@@ -19,14 +19,13 @@ const NavbarAuthControls = dynamic(() => import('@/components/shared/navbar-auth
 })
 
 const taskIcons: Record<TaskKey, any> = {
-  article: FileText,
   listing: Building2,
-  sbm: LayoutGrid,
   classified: Tag,
+  article: FileText,
   image: ImageIcon,
   profile: User,
+  sbm: LayoutGrid,
   social: LayoutGrid,
-  pdf: FileText,
   org: Building2,
   comment: FileText,
 }

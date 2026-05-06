@@ -17,14 +17,13 @@ import { useAuth } from '@/lib/auth-context'
 import { SITE_CONFIG, type TaskKey } from '@/lib/site-config'
 
 const taskIcons: Record<TaskKey, any> = {
-  article: FileText,
   listing: Building2,
-  sbm: LayoutGrid,
   classified: Tag,
+  article: FileText,
   image: ImageIcon,
   profile: User,
+  sbm: LayoutGrid,
   social: LayoutGrid,
-  pdf: FileText,
   org: Building2,
   comment: FileText,
 }

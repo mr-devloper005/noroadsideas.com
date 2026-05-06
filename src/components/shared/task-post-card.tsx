@@ -7,6 +7,7 @@ import type { TaskKey } from '@/lib/site-config'
 import { SITE_THEME } from '@/config/site.theme'
 import { getFactoryState } from '@/design/factory/get-factory-state'
 import { TASK_POST_CARD_OVERRIDE_ENABLED, TaskPostCardOverride } from '@/overrides/task-post-card'
+import { Badge } from '@/components/ui/badge'
 
 type ListingContent = {
   location?: string
@@ -60,24 +61,28 @@ const cardStyles = {
     muted: 'text-[#586b78]',
     title: 'text-[#172633]',
     badge: 'bg-[#355872] text-[#f7f8f0]',
+    cta: 'text-[#172633]',
   },
   'editorial-feature': {
     frame: 'rounded-[1.8rem] border border-[rgba(53,88,114,0.14)] bg-[linear-gradient(180deg,rgba(255,253,246,0.96),rgba(243,247,250,0.96))] shadow-[0_18px_55px_rgba(27,46,60,0.1)] hover:-translate-y-1 hover:shadow-[0_26px_75px_rgba(27,46,60,0.14)]',
     muted: 'text-[#586b78]',
     title: 'text-[#172633]',
     badge: 'bg-[#355872] text-[#f7f8f0]',
+    cta: 'text-[#172633]',
   },
   'studio-panel': {
     frame: 'rounded-[1.9rem] border border-white/10 bg-[linear-gradient(180deg,rgba(7,17,31,0.96),rgba(12,23,43,0.96))] text-white shadow-[0_24px_80px_rgba(15,23,42,0.35)] hover:-translate-y-1 hover:shadow-[0_30px_90px_rgba(15,23,42,0.42)]',
     muted: 'text-slate-300',
     title: 'text-white',
     badge: 'bg-[#8df0c8] text-[#07111f]',
+    cta: 'text-white',
   },
   'catalog-grid': {
     frame: 'rounded-[1.8rem] border border-[rgba(53,88,114,0.14)] bg-[rgba(247,248,240,0.96)] shadow-[0_18px_58px_rgba(27,46,60,0.08)] hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(27,46,60,0.12)]',
     muted: 'text-[#586b78]',
     title: 'text-[#172633]',
     badge: 'bg-[#355872] text-[#f7f8f0]',
+    cta: 'text-[#172633]',
   },
 } as const
 
@@ -106,7 +111,7 @@ export function TaskPostCard({
   const variant = taskKey || 'listing'
   const visualVariant = cardStyles[getVariantForTask(variant)]
   const isBookmarkVariant = variant === 'sbm' || variant === 'social'
-  const imageAspect = variant === 'image' ? 'aspect-[4/5]' : variant === 'article' ? 'aspect-[16/10]' : variant === 'pdf' ? 'aspect-[4/5]' : variant === 'classified' ? 'aspect-[16/11]' : 'aspect-[4/3]'
+  const imageAspect = variant === 'image' ? 'aspect-[4/5]' : variant === 'article' ? 'aspect-[16/10]' : variant === 'classified' ? 'aspect-[16/11]' : 'aspect-[4/3]'
   const altText = `${post.title} ${category} ${variant === 'listing' ? 'business listing' : variant} image`
   const imageSizes = variant === 'article' ? '(max-width: 640px) 90vw, (max-width: 1024px) 48vw, 420px' : variant === 'image' ? '(max-width: 640px) 82vw, (max-width: 1024px) 34vw, 320px' : '(max-width: 640px) 85vw, (max-width: 1024px) 42vw, 340px'
 
@@ -132,30 +137,51 @@ export function TaskPostCard({
         }
 
     return (
-      <Link href={href} className={`group flex h-full flex-col overflow-hidden transition duration-300 ${cardTone.frame}`}>
-        <div className="relative aspect-[16/11] overflow-hidden bg-slate-100">
-          <ContentImage src={image} alt={altText} fill sizes={imageSizes} quality={75} className="object-cover transition-transform duration-500 group-hover:scale-[1.04]" intrinsicWidth={960} intrinsicHeight={720} />
-          <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4">
-            <span className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${cardTone.badge}`}>
-              <Tag className="h-3.5 w-3.5" />
-              {category}
-            </span>
-            <span className="rounded-full bg-white/85 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-900">
-              {variant === 'classified' ? 'Open now' : 'Verified'}
-            </span>
+    <Link href={href} className={`group flex h-full flex-col overflow-hidden transition-all duration-300 ${cardTone.frame} hover:shadow-lg`}>
+        <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100">
+          <ContentImage src={image} alt={altText} fill sizes={imageSizes} quality={85} className="object-cover transition-all duration-500 group-hover:scale-[1.05]" intrinsicWidth={960} intrinsicHeight={540} />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent p-4">
+            <div className="flex items-center justify-between">
+              <Badge className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold ${cardTone.badge}`}>
+                <Tag className="h-3 w-3" />
+                {category}
+              </Badge>
+              <div className="flex items-center gap-2">
+                <span className={`text-xs font-medium ${cardTone.muted}`}>{variant === 'classified' ? 'Available' : 'Featured'}</span>
+                {variant === 'classified' ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-500 text-white text-xs font-medium rounded-full">New</span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-500 text-white text-xs font-medium rounded-full">Premium</span>
+                )}
+              </div>
+            </div>
           </div>
         </div>
-        <div className="flex flex-1 flex-col p-5">
-          <div className="flex items-center justify-between gap-3">
-            <h3 className={`line-clamp-2 text-xl font-semibold leading-snug ${cardTone.title}`}>{post.title}</h3>
-            <ArrowUpRight className={`h-5 w-5 shrink-0 ${cardTone.muted}`} />
+        <div className="flex-1 p-6">
+          <div className="space-y-4">
+            <h3 className={`text-xl font-bold leading-tight ${cardTone.title}`}>{post.title}</h3>
+            <p className={`line-clamp-2 text-sm leading-6 ${cardTone.muted} mt-2`}>{getExcerpt(content.description || post.summary, 160) || 'Discover this amazing listing.'}</p>
+            <div className="flex items-center gap-4 mt-4">
+              {content.location && (
+                <div className={`flex items-center gap-2 text-xs ${cardTone.muted}`}>
+                  <MapPin className="h-4 w-4" />
+                  <span>{content.location}</span>
+                </div>
+              )}
+              {content.email && (
+                <div className={`flex items-center gap-2 text-xs ${cardTone.muted}`}>
+                  <Mail className="h-4 w-4" />
+                  <span>{content.email}</span>
+                </div>
+              )}
+            </div>
+            <div className={`pt-4 border-t ${cardTone.frame} mt-4`}>
+              <div className={`text-sm font-medium ${cardTone.cta} flex items-center justify-between`}>
+                <span>{variant === 'classified' ? 'Contact now' : 'Learn more'}</span>
+                <ArrowUpRight className={`h-4 w-4 ${cardTone.muted}`} />
+              </div>
+            </div>
           </div>
-          <p className={`mt-3 line-clamp-3 text-sm leading-7 ${cardTone.muted}`}>{getExcerpt(content.description || post.summary) || 'Explore this local listing.'}</p>
-          <div className="mt-5 flex flex-wrap gap-3 text-xs">
-            {content.location ? <span className={`inline-flex items-center gap-1 ${cardTone.muted}`}><MapPin className="h-3.5 w-3.5" />{content.location}</span> : null}
-            {content.email ? <span className={`inline-flex items-center gap-1 ${cardTone.muted}`}><Mail className="h-3.5 w-3.5" />{content.email}</span> : null}
-          </div>
-          <div className={`mt-auto pt-5 text-sm font-semibold ${cardTone.cta}`}>{variant === 'classified' ? 'View offer' : 'View details'}</div>
         </div>
       </Link>
     )
@@ -184,22 +210,43 @@ export function TaskPostCard({
   }
 
   return (
-    <Link href={href} className={`group flex h-full flex-col overflow-hidden transition duration-300 ${visualVariant.frame}`}>
-      <div className={`relative ${imageAspect} overflow-hidden bg-[#ede2dc]`}>
-        <ContentImage src={image} alt={altText} fill sizes={imageSizes} quality={75} className="object-cover transition-transform duration-500 group-hover:scale-[1.04]" intrinsicWidth={960} intrinsicHeight={720} />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-80" />
-        <span className={`absolute left-4 top-4 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${visualVariant.badge}`}>
-          <Tag className="h-3.5 w-3.5" />
-          {category}
-        </span>
-        {variant === 'pdf' && <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-white/88 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-950 shadow"><FileText className="h-3.5 w-3.5" />PDF</span>}
-      </div>
-      <div className={`flex flex-1 flex-col p-5 ${compact ? 'py-4' : ''}`}>
-        <h3 className={`line-clamp-2 font-semibold leading-snug ${variant === 'article' ? 'text-[1.35rem]' : 'text-lg'} ${visualVariant.title}`}>{post.title}</h3>
-        <p className={`mt-3 text-sm leading-7 ${variant === 'article' ? 'line-clamp-4' : 'line-clamp-3'} ${visualVariant.muted}`}>{getExcerpt(content.description || post.summary) || 'Explore this post.'}</p>
-        <div className="mt-auto pt-4">
-          {content.location && <div className={`inline-flex items-center gap-1 text-xs ${visualVariant.muted}`}><MapPin className="h-3.5 w-3.5" />{content.location}</div>}
-          {content.email && <div className={`mt-2 inline-flex items-center gap-1 text-xs ${visualVariant.muted}`}><Mail className="h-3.5 w-3.5" />{content.email}</div>}
+    <Link href={href} className={`group flex h-full flex-col overflow-hidden transition-all duration-500 ${visualVariant.frame} hover:shadow-xl hover:-translate-y-2`}>
+      <div className="relative">
+        <div className={`relative ${imageAspect} overflow-hidden bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50`}>
+          <ContentImage src={image} alt={altText} fill sizes={imageSizes} quality={90} className="object-cover transition-all duration-700 group-hover:scale-[1.08] group-hover:rotate-1" intrinsicWidth={960} intrinsicHeight={540} />
+          <div className="absolute inset-0 bg-gradient-to-t from-purple-900/80 via-transparent to-transparent" />
+          <div className="absolute top-4 left-4 right-4">
+            <div className="flex justify-between items-start">
+              <Badge className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-wider ${visualVariant.badge} shadow-lg`}>
+                <Tag className="h-3.5 w-3.5" />
+                {category}
+              </Badge>
+                          </div>
+          </div>
+        </div>
+        <div className={`flex-1 p-8 ${compact ? 'py-4' : ''}`}>
+          <div className="space-y-6">
+            <h3 className={`text-2xl font-black leading-tight ${visualVariant.title}`}>{post.title}</h3>
+            <div className="flex items-center justify-center gap-2">
+              <span className={`text-sm font-semibold ${visualVariant.cta}`}>Continue Reading</span>
+              <ArrowUpRight className={`h-5 w-5 ${visualVariant.cta} group-hover:translate-x-1 transition-transform`} />
+            </div>
+            <p className={`line-clamp-4 text-base leading-7 ${visualVariant.muted} mt-4`}>{getExcerpt(content.description || post.summary, 200) || 'Discover this premium article with exclusive insights and expert analysis.'}</p>
+            <div className="flex items-center gap-4 mt-6">
+              {content.location && (
+                <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-100 border-2 border-blue-200 ${visualVariant.frame} shadow-lg`}>
+                  <MapPin className="h-5 w-5 text-blue-600" />
+                  <span className="text-sm font-medium text-blue-800">{content.location}</span>
+                </div>
+              )}
+              {content.email && (
+                <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-100 border-2 border-green-200 ${visualVariant.frame} shadow-lg`}>
+                  <Mail className="h-5 w-5 text-green-600" />
+                  <span className="text-sm font-medium text-green-800">{content.email}</span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </Link>

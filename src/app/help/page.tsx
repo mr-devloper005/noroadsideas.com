@@ -3,7 +3,6 @@ import { PageShell } from '@/components/shared/page-shell'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { mockFaqs } from '@/data/mock-data'
 
 const topics = [
   { title: 'Getting Started', description: 'Create your account and publish your first post.' },
@@ -37,12 +36,7 @@ export default function HelpPage() {
           <CardContent className="p-6">
             <h3 className="text-lg font-semibold text-foreground">FAQ</h3>
             <Accordion type="single" collapsible className="mt-4">
-              {mockFaqs.map((faq) => (
-                <AccordionItem key={faq.id} value={faq.id}>
-                  <AccordionTrigger>{faq.question}</AccordionTrigger>
-                  <AccordionContent>{faq.answer}</AccordionContent>
-                </AccordionItem>
-              ))}
+              <p className="text-sm text-muted-foreground">FAQs coming soon</p>
             </Accordion>
           </CardContent>
         </Card>

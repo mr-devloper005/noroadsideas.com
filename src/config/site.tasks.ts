@@ -55,15 +55,7 @@ export const siteTaskDefinitions = [
     contentType: 'article',
     enabled: false,
   },
-  {
-    key: 'pdf',
-    label: 'PDF Library',
-    route: '/pdf',
-    description: 'Reports, handouts, and document downloads.',
-    contentType: 'pdf',
-    enabled: false,
-  },
-  {
+    {
     key: 'org',
     label: 'Organizations',
     route: '/team',
@@ -82,6 +74,5 @@ export const siteTaskViews = {
   social: '/community',
   sbm: '/sbm',
   comment: '/blog',
-  pdf: '/pdf',
   org: '/team',
 } as const

@@ -131,7 +131,6 @@ export default function LocalPostDetailPage() {
   const location = content.address || content.location;
   const images = getImageUrls(post, content);
   const isArticle = task === "article";
-  const isPdf = task === "pdf";
   const mapEmbedUrl = buildMapEmbedUrl(content.latitude, content.longitude, location);
 
   return (
@@ -155,28 +154,7 @@ export default function LocalPostDetailPage() {
             ) : null}
             <RichContent html={formatRichHtml(description, "Details coming soon.")} />
           </div>
-        ) : isPdf ? (
-          <div className="mx-auto w-full max-w-4xl">
-            <h1 className="text-3xl font-semibold text-foreground">{post.title}</h1>
-            <RichContent html={descriptionHtml} className="mt-2 text-sm" />
-            {content.fileUrl ? (
-              <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-white">
-                <iframe
-                  title={post.title}
-                  src={`${content.fileUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-                  className="h-[70vh] w-full"
-                />
-              </div>
-            ) : null}
-            {content.fileUrl ? (
-              <Button className="mt-6" asChild>
-                <Link href={content.fileUrl} target="_blank" rel="noreferrer">
-                  Download PDF
-                </Link>
-              </Button>
-            ) : null}
-          </div>
-        ) : (
+                ) : (
           <div className="grid gap-10 lg:grid-cols-[2fr_1fr]">
             <div>
               <TaskImageCarousel images={images} />
