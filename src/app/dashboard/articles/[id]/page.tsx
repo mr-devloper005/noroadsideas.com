@@ -9,13 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
   Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { useToast } from '@/components/ui/use-toast'
-import { mockArticles } from '@/data/mock-data'
 import type { Article } from '@/types'
 import { loadFromStorage, storageKeys } from '@/lib/local-storage'
 import { useAuth } from '@/lib/auth-context'
@@ -25,7 +19,7 @@ export default function DashboardArticleDetailPage({ params }: { params: Promise
   const { toast } = useToast()
   const { user } = useAuth()
   const [storedArticles, setStoredArticles] = useState<Article[]>([])
-  const allArticles = useMemo(() => [...storedArticles, ...mockArticles], [storedArticles])
+  const allArticles = useMemo(() => storedArticles, [storedArticles])
   const article = allArticles.find((item) => item.id === resolvedParams.id)
   const canEdit = article ? (article.id.startsWith('user-') || (user && article.author.id === user.id)) : false
 

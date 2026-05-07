@@ -128,19 +128,7 @@ const FORM_CONFIG: Record<TaskKey, { title: string; description: string; fields:
       { key: "tags", label: "Tags", type: "tags" },
     ],
   },
-  pdf: {
-    title: "Create PDF Entry",
-    description: "Add a local-only PDF resource.",
-    fields: [
-      { key: "title", label: "PDF title", type: "text", required: true },
-      { key: "summary", label: "Short summary", type: "textarea", required: true },
-      { key: "description", label: "Description", type: "textarea" },
-      { key: "fileUrl", label: "PDF file URL", type: "file", required: true },
-      { key: "category", label: "Category", type: "category", required: true },
-      { key: "images", label: "Cover image", type: "images" },
-    ],
-  },
-  org: {
+    org: {
     title: "Create Organization",
     description: "Create a local-only organization profile.",
     fields: [
@@ -178,7 +166,6 @@ export default function CreateTaskPage() {
   const formConfig = FORM_CONFIG[taskKey];
 
   const [values, setValues] = useState<Record<string, string>>({});
-  const [uploadingPdf, setUploadingPdf] = useState(false);
 
   if (!taskConfig || !formConfig) {
     return (
@@ -323,25 +310,23 @@ export default function CreateTaskPage() {
                   <div className="grid gap-3">
                     <Input
                       type="file"
-                      accept="application/pdf"
+                      accept="image/*"
                       onChange={(event) => {
                         const file = event.target.files?.[0];
                         if (!file) return;
-                        if (file.type !== "application/pdf") {
+                        if (!file.type.startsWith("image/")) {
                           toast({
                             title: "Invalid file",
-                            description: "Please upload a PDF file.",
+                            description: "Please upload an image file.",
                           });
                           return;
                         }
                         const reader = new FileReader();
-                        setUploadingPdf(true);
                         reader.onload = () => {
                           const result = typeof reader.result === "string" ? reader.result : "";
                           updateValue(field.key, result);
-                          setUploadingPdf(false);
                           toast({
-                            title: "PDF uploaded",
+                            title: "Image uploaded",
                             description: "File is stored locally.",
                           });
                         };
@@ -350,13 +335,10 @@ export default function CreateTaskPage() {
                     />
                     <Input
                       type="text"
-                      placeholder="Or paste a PDF URL"
+                      placeholder="Or paste an image URL"
                       value={values[field.key] || ""}
                       onChange={(event) => updateValue(field.key, event.target.value)}
                     />
-                    {uploadingPdf ? (
-                      <p className="text-xs text-muted-foreground">Uploading PDF…</p>
-                    ) : null}
                   </div>
                 ) : (
                   <Input

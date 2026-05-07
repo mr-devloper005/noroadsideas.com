@@ -4,10 +4,9 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ClassifiedAdCard } from '@/components/shared/cards'
-import { mockClassifiedAds } from '@/data/mock-data'
 
 export function FeaturedAds() {
-  const featuredAds = mockClassifiedAds.filter(a => a.isFeatured).slice(0, 4)
+  const featuredAds: any[] = []
 
   return (
     <section className="border-b border-border py-16">

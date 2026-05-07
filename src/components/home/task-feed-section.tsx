@@ -14,7 +14,8 @@ const taskIcons: Record<string, typeof Building2> = {
   profile: Users,
   social: LayoutGrid,
   sbm: LayoutGrid,
-  pdf: FileText,
+  org: Building2,
+  comment: FileText,
 };
 
 const sectionStyles = {
