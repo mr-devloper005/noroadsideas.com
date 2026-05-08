@@ -4,9 +4,10 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ListingCard } from '@/components/shared/cards'
+import { mockListings } from '@/data/mock-data'
 
 export function FeaturedListings() {
-  const featuredListings: any[] = []
+  const featuredListings = mockListings.filter(l => l.isFeatured).slice(0, 4)
 
   return (
     <section className="border-b border-border py-16">

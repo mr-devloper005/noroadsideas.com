@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
 import type { User } from '@/types'
+import { currentUser } from '@/data/mock-data'
 import { loadFromStorage, saveToStorage, storageKeys } from '@/lib/local-storage'
 
 interface AuthContextType {
@@ -33,11 +34,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       year: 'numeric',
     })
     return {
+      ...currentUser,
       id: `user-${Date.now()}`,
-      name: '',
-      email: '',
-      avatar: '',
-      bio: '',
       joinedDate,
       followers: 0,
       following: 0,
@@ -51,14 +49,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000))
     
-    // Login - in production this would validate credentials
+    // Mock login - in production this would validate credentials
     if (email && password) {
       const storedUser = loadFromStorage<User | null>(storageKeys.user, null)
       const nextUser = storedUser?.email === email
         ? storedUser
         : buildUser({
             email,
-            name: email.split('@')[0]?.replace(/[^a-zA-Z0-9]/g, '') || 'User',
+            name: email.split('@')[0]?.replace(/[^a-zA-Z0-9]/g, '') || currentUser.name,
           })
       setUser(nextUser)
       saveToStorage(storageKeys.user, nextUser)
@@ -78,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500))
     
-    // Signup
+    // Mock signup
     if (name && email && password) {
       const nextUser = buildUser({
         name,

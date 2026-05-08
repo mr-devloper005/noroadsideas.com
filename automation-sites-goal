@@ -176,7 +176,7 @@ tasks.config.ts me kya jayega
 Task availability:
 
 export const tasksConfig = {
-  enabledTasks: ['listing', 'article', 'classified', 'image', 'comment'],
+  enabledTasks: ['listing', 'article', 'classified', 'image', 'pdf', 'comment'],
   routeMap: {...},
 }
 Master panel me kya rahega
@@ -245,6 +245,7 @@ internal links
 Step 9. Publish first test content
 listing
 article
+pdf
 comment
 Step 10. Final QA
 mobile

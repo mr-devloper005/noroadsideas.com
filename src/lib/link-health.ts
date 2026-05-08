@@ -8,6 +8,7 @@ const LINK_OBJECT_FIELDS = [
   "website",
   "targetUrl",
   "fileUrl",
+  "pdfUrl",
   "documentUrl",
   "sourceUrl",
   "canonicalUrl",

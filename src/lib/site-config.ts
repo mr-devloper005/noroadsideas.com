@@ -8,6 +8,7 @@ export type TaskKey =
   | 'image'
   | 'profile'
   | 'social'
+  | 'pdf'
   | 'org'
   | 'sbm'
   | 'comment'
@@ -28,7 +29,6 @@ export type SiteConfig = {
   domain: string
   baseUrl: string
   defaultOgImage: string
-  contactEmail: string
   tasks: TaskConfig[]
   taskViews: Partial<Record<TaskKey, string>>
   seo: {
@@ -46,7 +46,6 @@ export const SITE_CONFIG: SiteConfig = {
   domain: siteIdentity.domain,
   baseUrl: siteIdentity.url,
   defaultOgImage: siteIdentity.ogImage,
-  contactEmail: siteIdentity.contactEmail,
   tasks: siteTaskDefinitions.map((task) => ({ ...task })),
   taskViews: { ...siteTaskViews },
   seo: {
@@ -60,6 +59,7 @@ export const SITE_CONFIG: SiteConfig = {
       'profiles',
       'images',
       'social bookmarking',
+      'pdf library',
       'content discovery',
       'visual stories',
       siteIdentity.name,

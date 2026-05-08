@@ -8,6 +8,7 @@ import { Footer } from '@/components/shared/footer'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { BookmarkCollectionCard } from '@/components/sbm/bookmark-collection-card'
+import { mockBookmarkCollections } from '@/data/mock-data'
 import type { BookmarkCollection } from '@/types'
 import { loadFromStorage, storageKeys } from '@/lib/local-storage'
 
@@ -16,7 +17,7 @@ export default function BookmarkCollectionsPage() {
   const collections = useMemo(() => {
     const map = new Map<string, BookmarkCollection>()
     storedCollections.forEach((collection) => map.set(collection.id, collection))
-    ([] as any[]).forEach((collection) => {
+    mockBookmarkCollections.forEach((collection) => {
       if (!map.has(collection.id)) {
         map.set(collection.id, collection)
       }
