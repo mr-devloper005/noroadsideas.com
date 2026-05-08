@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
+import { mockClassifiedAds } from '@/data/mock-data'
 import { loadFromStorage, saveToStorage, storageKeys } from '@/lib/local-storage'
 import type { ClassifiedAd } from '@/types'
 import { useAuth } from '@/lib/auth-context'
@@ -19,7 +20,7 @@ export default function DashboardAdEditPage({ params }: { params: Promise<{ id: 
   const [saved, setSaved] = useState(false)
   const [storedAds, setStoredAds] = useState<ClassifiedAd[]>([])
   const ad = useMemo(
-    () => storedAds.find((item) => item.id === resolvedParams.id),
+    () => [...storedAds, ...mockClassifiedAds].find((item) => item.id === resolvedParams.id),
     [resolvedParams.id, storedAds]
   )
   const canEdit = ad ? (ad.id.startsWith('user-') || (user && ad.seller.id === user.id)) : false

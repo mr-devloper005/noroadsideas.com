@@ -11,6 +11,7 @@ import { BookmarkCard } from '@/components/sbm/bookmark-card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
+import { mockBookmarkCollections } from '@/data/mock-data'
 import type { BookmarkCollection } from '@/types'
 import { loadFromStorage, saveToStorage, storageKeys } from '@/lib/local-storage'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -25,7 +26,7 @@ export default function BookmarkCollectionDetailPage() {
   const collection = useMemo(() => {
     const map = new Map<string, BookmarkCollection>()
     storedCollections.forEach((item) => map.set(item.id, item))
-    ([] as any[]).forEach((item) => {
+    mockBookmarkCollections.forEach((item) => {
       if (!map.has(item.id)) map.set(item.id, item)
     })
     return map.get(id)

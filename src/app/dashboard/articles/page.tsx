@@ -30,21 +30,31 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet'
 import { useToast } from '@/components/ui/use-toast'
+import { mockArticles } from '@/data/mock-data'
 import type { Article } from '@/types'
 import { loadFromStorage, saveToStorage, storageKeys } from '@/lib/local-storage'
 import { useAuth } from '@/lib/auth-context'
 
 const mergeArticles = (stored: Article[]) => {
-  return stored
+  const map = new Map<string, Article>()
+  stored.forEach((article) => map.set(article.id, article))
+  mockArticles.forEach((article) => {
+    if (!map.has(article.id)) {
+      map.set(article.id, article)
+    }
+  })
+  return Array.from(map.values())
 }
 
 export default function DashboardArticlesPage() {
   const { toast } = useToast()
   const { user } = useAuth()
-  const [articles, setArticles] = useState<Article[]>([])
+  const [articles, setArticles] = useState<Article[]>(() => [...mockArticles])
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
-  const [statusMap, setStatusMap] = useState<Record<string, string>>({})
+  const [statusMap, setStatusMap] = useState<Record<string, string>>(() =>
+    Object.fromEntries(mockArticles.map((article) => [article.id, 'published']))
+  )
   const [editingId, setEditingId] = useState<string | null>(null)
   const [draftTitle, setDraftTitle] = useState('')
   const [activeSheetId, setActiveSheetId] = useState<string | null>(null)
