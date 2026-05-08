@@ -10,14 +10,15 @@ import Link from 'next/link'
 import { BookmarkCollectionCard } from '@/components/sbm/bookmark-collection-card'
 import type { BookmarkCollection } from '@/types'
 import { loadFromStorage, storageKeys } from '@/lib/local-storage'
+import { mockBookmarkCollections } from '@/data/mock-data'
 
 export default function BookmarkCollectionsPage() {
   const [storedCollections, setStoredCollections] = useState<BookmarkCollection[]>([])
   const collections = useMemo(() => {
     const map = new Map<string, BookmarkCollection>()
     const safeStoredCollections = Array.isArray(storedCollections) ? storedCollections : []
-    safeStoredCollections.forEach((collection) => map.set(collection.id, collection))
-    ([] as any[]).forEach((collection) => {
+    safeStoredCollections.forEach((collection) => map.set(collection.id, collection));
+    mockBookmarkCollections.forEach((collection) => {
       if (!map.has(collection.id)) {
         map.set(collection.id, collection)
       }
