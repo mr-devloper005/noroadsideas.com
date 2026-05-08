@@ -5,11 +5,13 @@ import Image from 'next/image'
 import { ArrowRight, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { mockArticles } from '@/data/mock-data'
 import { cn } from '@/lib/utils'
 
 export function FeaturedArticles() {
-  const source: any[] = []
-  const [hero, second, third, ...rest] = source
+  const featured = mockArticles.filter(a => a.isFeatured)
+  const source = featured.length >= 5 ? featured : mockArticles
+  const [hero, second, third, ...rest] = source.slice(0, 6)
 
   return (
     <section className="relative overflow-hidden border-b border-border py-16">
@@ -60,9 +62,6 @@ export function FeaturedArticles() {
                 <h3 className="text-2xl font-semibold text-foreground sm:text-3xl">
                   {hero.title}
                 </h3>
-                <Button variant="secondary" className="w-fit mx-auto">
-                  Continue Reading
-                </Button>
                 <p className="line-clamp-2 text-sm text-muted-foreground">
                   {hero.excerpt}
                 </p>
@@ -118,6 +117,9 @@ export function FeaturedArticles() {
                     <div>Metrics-driven governance keeps teams aligned at scale.</div>
                   </div>
                 </div>
+                <Button variant="secondary" className="w-fit">
+                  Continue Reading
+                </Button>
               </div>
             </Link>
           )}
