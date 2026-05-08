@@ -7,8 +7,10 @@ export const revalidate = 3;
 export const generateMetadata = () =>
   buildTaskMetadata("profile", {
     path: "/profile",
-    title: taskPageMetadata.profile.title,
-    description: taskPageMetadata.profile.description,
+    title: taskPageMetadata.profile?.title || "Profiles",
+    description:
+      taskPageMetadata.profile?.description ||
+      "Browse creator profiles, contributor identities, and community members.",
   });
 
 export default function ProfilePage({ searchParams }: { searchParams?: { category?: string } }) {
