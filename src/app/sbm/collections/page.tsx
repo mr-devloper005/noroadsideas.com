@@ -15,7 +15,8 @@ export default function BookmarkCollectionsPage() {
   const [storedCollections, setStoredCollections] = useState<BookmarkCollection[]>([])
   const collections = useMemo(() => {
     const map = new Map<string, BookmarkCollection>()
-    storedCollections.forEach((collection) => map.set(collection.id, collection))
+    const safeStoredCollections = Array.isArray(storedCollections) ? storedCollections : []
+    safeStoredCollections.forEach((collection) => map.set(collection.id, collection))
     ([] as any[]).forEach((collection) => {
       if (!map.has(collection.id)) {
         map.set(collection.id, collection)
@@ -25,7 +26,8 @@ export default function BookmarkCollectionsPage() {
   }, [storedCollections])
 
   useEffect(() => {
-    setStoredCollections(loadFromStorage<BookmarkCollection[]>(storageKeys.bookmarkCollections, []))
+    const saved = loadFromStorage<BookmarkCollection[]>(storageKeys.bookmarkCollections, [])
+    setStoredCollections(Array.isArray(saved) ? saved : [])
   }, [])
 
   return (
