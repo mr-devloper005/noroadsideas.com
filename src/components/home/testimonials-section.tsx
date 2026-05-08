@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import { Star, Quote } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent } from '@/components/ui/card'
-import { mockTestimonials } from '@/data/mock-data'
 
 export function TestimonialsSection() {
   return (
@@ -20,7 +19,7 @@ export function TestimonialsSection() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          {mockTestimonials.map((testimonial, index) => (
+          {([] as any[]).map((testimonial, index) => (
             <motion.div
               key={testimonial.id}
               initial={{ opacity: 0, y: 20 }}

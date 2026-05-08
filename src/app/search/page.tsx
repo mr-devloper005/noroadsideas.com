@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { fetchSiteFeed } from "@/lib/site-connector";
 import { buildPostUrl, getPostTaskKey } from "@/lib/task-data";
-import { getMockPostsForTask } from "@/lib/mock-posts";
 import { SITE_CONFIG } from "@/lib/site-config";
 import { TaskPostCard } from "@/components/shared/task-post-card";
 
@@ -42,7 +41,7 @@ export default async function SearchPage({
       ? feed.posts
       : useMaster
         ? []
-        : SITE_CONFIG.tasks.flatMap((task) => getMockPostsForTask(task.key));
+        : SITE_CONFIG.tasks.flatMap((task) => []));
 
   const filtered = posts.filter((post) => {
     const content = post.content && typeof post.content === "object" ? post.content : {};

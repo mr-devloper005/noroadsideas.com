@@ -18,14 +18,11 @@ type StaticSitemapRoute = {
 };
 
 const STATIC_ROUTES: StaticSitemapRoute[] = [
-  { path: "/", changeFrequency: "hourly", priority: 1 },
-  { path: "/listings", changeFrequency: "daily", priority: 0.95 },
+  { path: "/", changeFrequency: "daily", priority: 1.00 },
   { path: "/articles", changeFrequency: "daily", priority: 0.95 },
   { path: "/classifieds", changeFrequency: "daily", priority: 0.88 },
   { path: "/images", changeFrequency: "daily", priority: 0.88 },
-  { path: "/profile", changeFrequency: "daily", priority: 0.82 },
   { path: "/sbm", changeFrequency: "daily", priority: 0.82 },
-  { path: "/pdf", changeFrequency: "daily", priority: 0.82 },
 ];
 
 const getTaskFromPost = (post: SitePost) => {

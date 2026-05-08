@@ -59,11 +59,9 @@ export function TaskListClient({ task, initialPosts, category }: Props) {
   const gridClassName =
     task === "article"
       ? "grid gap-6 md:grid-cols-2 xl:grid-cols-3"
-      : task === "pdf"
-        ? "grid gap-6 md:grid-cols-2"
-        : task === "social"
-          ? "grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-          : "grid gap-6 sm:grid-cols-2 lg:grid-cols-4";
+      : task === "social"
+        ? "grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        : "grid gap-6 md:grid-cols-2 lg:grid-cols-3";
 
   return (
     <div className={gridClassName}>
@@ -72,7 +70,7 @@ export function TaskListClient({ task, initialPosts, category }: Props) {
         const href = localOnly
           ? `/local/${task}/${post.slug}`
           : buildPostUrl(task, post.slug);
-        return <TaskPostCard key={post.id} post={post} href={href} taskKey={task} compact={task === "pdf" || task === "social"} />;
+        return <TaskPostCard key={post.id} post={post} href={href} taskKey={task} compact={task === "social"} />;
       })}
     </div>
   );
