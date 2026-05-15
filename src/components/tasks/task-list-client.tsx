@@ -12,10 +12,13 @@ type Props = {
   task: TaskKey;
   initialPosts: SitePost[];
   category?: string;
+  query?: string;
 };
 
-export function TaskListClient({ task, initialPosts, category }: Props) {
+export function TaskListClient({ task, initialPosts, category, query }: Props) {
   const localPosts = getLocalPostsForTask(task);
+  const selectedCategory = category ? normalizeCategory(category) : "all";
+  const searchTerm = query || "";
 
   const merged = useMemo(() => {
     const bySlug = new Set<string>();
@@ -33,24 +36,40 @@ export function TaskListClient({ task, initialPosts, category }: Props) {
       combined.push(post);
     });
 
-    const normalizedCategory = category ? normalizeCategory(category) : "all";
-    if (normalizedCategory === "all") {
-      return combined.filter((post) => {
-        const content = post.content && typeof post.content === "object" ? post.content : {};
-        const value = typeof (content as any).category === "string" ? (content as any).category : "";
-        return !value || isValidCategory(value);
-      });
-    }
-
     return combined.filter((post) => {
       const content = post.content && typeof post.content === "object" ? post.content : {};
-      const value =
+      const value = typeof (content as any).category === "string" ? (content as any).category : "";
+      return !value || isValidCategory(value);
+    });
+  }, [initialPosts, localPosts]);
+
+  const filtered = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+    return merged.filter((post) => {
+      const content = post.content && typeof post.content === "object" ? post.content : {};
+      const normalizedPostCategory =
         typeof (content as any).category === "string"
           ? normalizeCategory((content as any).category)
           : "";
-      return value === normalizedCategory;
+
+      const categoryMatches =
+        selectedCategory === "all" || normalizedPostCategory === selectedCategory;
+      if (!categoryMatches) return false;
+
+      if (!query) return true;
+      const title = post.title?.toLowerCase() || "";
+      const summary = post.summary?.toLowerCase() || "";
+      const description =
+        typeof (content as any).description === "string"
+          ? ((content as any).description as string).toLowerCase()
+          : "";
+      return (
+        title.includes(query) ||
+        summary.includes(query) ||
+        description.includes(query)
+      );
     });
-  }, [category, initialPosts, localPosts]);
+  }, [merged, searchTerm, selectedCategory]);
 
   if (!merged.length) {
     return null;
@@ -66,14 +85,22 @@ export function TaskListClient({ task, initialPosts, category }: Props) {
           : "grid gap-6 sm:grid-cols-2 lg:grid-cols-4";
 
   return (
-    <div className={gridClassName}>
-      {merged.map((post) => {
-        const localOnly = (post as any).localOnly;
-        const href = localOnly
-          ? `/local/${task}/${post.slug}`
-          : buildPostUrl(task, post.slug);
-        return <TaskPostCard key={post.id} post={post} href={href} taskKey={task} compact={task === "pdf" || task === "social"} />;
-      })}
+    <div>
+      {filtered.length ? (
+        <div className={gridClassName}>
+          {filtered.map((post) => {
+            const localOnly = (post as any).localOnly;
+            const href = localOnly
+              ? `/local/${task}/${post.slug}`
+              : buildPostUrl(task, post.slug);
+            return <TaskPostCard key={post.id} post={post} href={href} taskKey={task} compact={task === "pdf" || task === "social"} />;
+          })}
+        </div>
+      ) : (
+        <p className="rounded-xl border border-[var(--editorial-line)] bg-white/90 p-4 text-sm text-[var(--editorial-muted)]">
+          No articles found for this category/search.
+        </p>
+      )}
     </div>
   );
 }

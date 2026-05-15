@@ -11,6 +11,7 @@ import { CATEGORY_OPTIONS, normalizeCategory } from '@/lib/categories'
 import { taskIntroCopy } from '@/config/site.content'
 import { getFactoryState } from '@/design/factory/get-factory-state'
 import { TASK_LIST_PAGE_OVERRIDE_ENABLED, TaskListPageOverride } from '@/overrides/task-list-page'
+import type { SitePost } from '@/lib/site-connector'
 
 const taskIcons: Record<TaskKey, any> = {
   listing: Building2,
@@ -40,7 +41,7 @@ const variantShells = {
   'sbm-library': 'bg-[linear-gradient(180deg,#f7f8fc_0%,#ffffff_100%)]',
 } as const
 
-export async function TaskListPage({ task, category }: { task: TaskKey; category?: string }) {
+export async function TaskListPage({ task, category, query }: { task: TaskKey; category?: string; query?: string }) {
   if (TASK_LIST_PAGE_OVERRIDE_ENABLED) {
     return await TaskListPageOverride({ task, category })
   }
@@ -48,6 +49,21 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
   const taskConfig = getTaskConfig(task)
   const posts = await fetchTaskPosts(task, 30, { allowMockFallback: task === 'article' })
   const normalizedCategory = category ? normalizeCategory(category) : 'all'
+  const normalizedQuery = (query || '').trim()
+  const queryLower = normalizedQuery.toLowerCase()
+  const filterPosts = (items: SitePost[]) =>
+    items.filter((post) => {
+      const content = post.content && typeof post.content === 'object' ? post.content : {}
+      const rawCategory = typeof (content as any).category === 'string' ? (content as any).category : ''
+      const postCategory = rawCategory ? normalizeCategory(rawCategory) : ''
+      const categoryMatches = normalizedCategory === 'all' || postCategory === normalizedCategory
+      if (!categoryMatches) return false
+      if (!queryLower) return true
+      const title = post.title?.toLowerCase() || ''
+      const summary = post.summary?.toLowerCase() || ''
+      const description = typeof (content as any).description === 'string' ? ((content as any).description as string).toLowerCase() : ''
+      return title.includes(queryLower) || summary.includes(queryLower) || description.includes(queryLower)
+    })
   const intro = taskIntroCopy[task]
   const baseUrl = SITE_CONFIG.baseUrl.replace(/\/$/, '')
   const schemaItems = posts.slice(0, 10).map((post, index) => ({
@@ -61,6 +77,7 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
   const isArticleTask = task === 'article'
   const isPdfTask = task === 'pdf'
   const isSocialTask = task === 'social'
+  const shouldShowFeaturedSection = isArticleTask || isPdfTask || isSocialTask
   const shellClass =
     isArticleTask
       ? 'bg-[radial-gradient(circle_at_top_left,rgba(122,170,206,0.14),transparent_24%),linear-gradient(180deg,#f7f8f0_0%,#ffffff_100%)]'
@@ -111,7 +128,12 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           input: 'border border-slate-200 bg-white text-slate-950',
           button: 'bg-slate-950 text-white hover:bg-slate-800',
         }
-  const featuredPosts = posts.slice(0, 3)
+  const filteredPosts = filterPosts(posts)
+  const featuredPosts = filteredPosts.slice(0, 3)
+  const featuredSlugs = new Set(featuredPosts.map((post) => post.slug))
+  const remainingPosts = shouldShowFeaturedSection
+    ? filteredPosts.filter((post) => !featuredSlugs.has(post.slug))
+    : filteredPosts
 
   return (
     <div className={`min-h-screen ${shellClass}`}>
@@ -178,6 +200,21 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           <section className="mb-12">
             <h1 className="max-w-4xl text-5xl font-semibold tracking-[-0.05em] text-foreground">{taskConfig?.description || 'Latest posts'}</h1>
             <p className={`mt-5 max-w-2xl text-sm leading-8 ${ui.muted}`}>Articles get more breathing room, stronger hierarchy, and a reading rhythm that feels intentionally editorial rather than feed-like.</p>
+            <form className={`mt-6 grid gap-3 rounded-[1.4rem] p-4 md:grid-cols-[220px_1fr_auto] ${ui.panel}`} action={taskConfig?.route || '#'}>
+              <select name="category" defaultValue={normalizedCategory} className={`h-11 rounded-xl px-3 text-sm ${ui.input}`}>
+                <option value="all">All categories</option>
+                {CATEGORY_OPTIONS.map((item) => (
+                  <option key={item.slug} value={item.slug}>{item.name}</option>
+                ))}
+              </select>
+              <input
+                name="q"
+                defaultValue={normalizedQuery}
+                placeholder="Search articles in selected category..."
+                className={`h-11 rounded-xl px-3 text-sm ${ui.input}`}
+              />
+              <button type="submit" className={`h-11 rounded-xl px-4 text-sm font-medium ${ui.button}`}>Search</button>
+            </form>
           </section>
         ) : null}
 
@@ -314,7 +351,7 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           </section>
         ) : null}
 
-        {featuredPosts.length && (isArticleTask || isPdfTask || isSocialTask) ? (
+        {featuredPosts.length && shouldShowFeaturedSection ? (
           <section className="mb-12">
             <div className="mb-4 flex items-center justify-between gap-4">
               <div>
@@ -339,7 +376,7 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           </section>
         ) : null}
 
-        <TaskListClient task={task} initialPosts={posts} category={normalizedCategory} />
+        <TaskListClient task={task} initialPosts={remainingPosts} category={normalizedCategory} query={normalizedQuery} />
       </main>
       <Footer />
     </div>
