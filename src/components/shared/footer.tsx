@@ -133,6 +133,11 @@ export function Footer() {
             </div>
           </div>
           <div className="mt-10 border-t border-white/10 pt-5 text-sm text-slate-400">&copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.</div>
+          <div className="mt-4 flex flex-wrap gap-4 text-sm text-slate-300">
+            <Link href="/about" className="hover:text-white">About Us</Link>
+            <Link href="/privacy" className="hover:text-white">Privacy</Link>
+            <Link href="/terms" className="hover:text-white">Terms</Link>
+          </div>
         </div>
       </footer>
     )
@@ -157,6 +162,9 @@ export function Footer() {
           <div className="mt-10 flex flex-col gap-4 border-t border-[var(--editorial-line)] pt-6 text-sm text-[var(--editorial-muted)] md:flex-row md:items-center md:justify-between">
             <p>&copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.</p>
             <div className="flex flex-wrap gap-4">
+              <Link href="/about" className="hover:text-[var(--editorial-ink)]">About Us</Link>
+              <Link href="/privacy" className="hover:text-[var(--editorial-ink)]">Privacy</Link>
+              <Link href="/terms" className="hover:text-[var(--editorial-ink)]">Terms</Link>
               <Link href="/help" className="hover:text-[var(--editorial-ink)]">Help Center</Link>
               <Link href="/contact" className="hover:text-[var(--editorial-ink)]">Contact us</Link>
             </div>
@@ -193,7 +201,14 @@ export function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-12 border-t border-slate-200 pt-6 text-center text-sm text-slate-500">&copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.</div>
+        <div className="mt-12 border-t border-slate-200 pt-6 text-center text-sm text-slate-500">
+          &copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.
+          <div className="mt-3 flex justify-center gap-4">
+            <Link href="/about" className="hover:text-slate-950">About Us</Link>
+            <Link href="/privacy" className="hover:text-slate-950">Privacy</Link>
+            <Link href="/terms" className="hover:text-slate-950">Terms</Link>
+          </div>
+        </div>
       </div>
     </footer>
   )

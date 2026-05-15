@@ -49,14 +49,6 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/article',
-        destination: '/articles',
-      },
-      {
-        source: '/article/:slug*',
-        destination: '/articles/:slug*',
-      },
-      {
         source: '/user',
         destination: '/profile',
       },
